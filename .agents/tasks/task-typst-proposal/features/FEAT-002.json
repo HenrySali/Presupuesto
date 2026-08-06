@@ -1,0 +1,23 @@
+{
+  "id": "FEAT-002",
+  "type": "chore",
+  "description": "Create an index.html that serves as a simple landing/redirect page for the repository, and ensure the PDF is generated as a final artifact.",
+  "status": "completed",
+  "steps": [
+    "Create /projects/sandbox/Presupuesto/index.html - a simple, clean page that links to the HTML version and mentions the Typst source. It should have basic styling with the SmartTemp brand colors. Include a link to propuesta-smarttemp.html and a note that the professional PDF is generated from propuesta-smarttemp.typ using Typst.",
+    "Compile the final PDF: typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf",
+    "Verify both files exist and are properly linked"
+  ],
+  "acceptance_criteria": [
+    "index.html exists and is valid HTML",
+    "index.html links to propuesta-smarttemp.html",
+    "index.html mentions the Typst source file",
+    "propuesta-smarttemp.pdf compiles successfully from the .typ source"
+  ],
+  "verification": [
+    "test -f /projects/sandbox/Presupuesto/index.html && echo 'index.html exists'",
+    "cd /projects/sandbox/Presupuesto && typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf && echo 'PDF compiled'"
+  ],
+  "blocked_reason": null,
+  "findings": "index.html created with SmartTemp branding (#29b6f6), links to propuesta-smarttemp.html, and mentions the Typst source. PDF compiled successfully at 118KB."
+}

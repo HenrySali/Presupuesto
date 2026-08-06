@@ -1,0 +1,14 @@
+{
+  "task_id": "task-typst-proposal",
+  "task_description": "Convert the SmartTemp commercial proposal from HTML to Typst format, producing a professional parameterized A4 PDF document that reproduces the same 6-page layout, content, and visual design.",
+  "status": "completed",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null,
+  "verification": {
+    "build": "pass",
+    "tests": "pass",
+    "test_quality": "pass",
+    "docker_build": "skipped",
+    "summary": "typst compile succeeds with zero errors, produces 6-page A4 PDF (119KB) with proper Spanish diacritics, parameterized variables, and all content matching the HTML original."
+  }
+}

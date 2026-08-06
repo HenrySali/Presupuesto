@@ -1,0 +1,24 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Blue rounded square background -->
+  <rect x="0" y="0" width="100" height="100" rx="16" ry="16" fill="#29b6f6"/>
+
+  <!-- Thermometer tube (white stroke) -->
+  <rect x="42" y="18" width="16" height="52" rx="8" ry="8" fill="none" stroke="white" stroke-width="3"/>
+
+  <!-- Thermometer bulb (white stroke circle at bottom) -->
+  <circle cx="50" cy="74" r="12" fill="none" stroke="white" stroke-width="3"/>
+
+  <!-- Mercury fill in tube -->
+  <rect x="44.5" y="38" width="11" height="30" rx="5.5" ry="5.5" fill="#ef5350"/>
+
+  <!-- Mercury fill in bulb -->
+  <circle cx="50" cy="74" r="9" fill="#ef5350"/>
+
+  <!-- Scale lines on the right side of the tube -->
+  <line x1="59" y1="26" x2="65" y2="26" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="59" y1="33" x2="65" y2="33" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="59" y1="40" x2="65" y2="40" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="59" y1="47" x2="65" y2="47" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="59" y1="54" x2="65" y2="54" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="59" y1="61" x2="65" y2="61" stroke="white" stroke-width="2" stroke-linecap="round"/>
+</svg>

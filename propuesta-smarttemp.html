@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTemp - Sistema de Monitoreo Continuo de Temperatura</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @page { size: A4; margin: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2d3436; line-height: 1.6; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; overflow-x: hidden; }
+        .page { width: 100%; max-width: 960px; padding: 60px 40px; margin: 0 auto; position: relative; display: flex; flex-direction: column; overflow-x: hidden; }
+        .page + .page { border-top: 1px solid #e9ecef; }
+
+        /* Tablet breakpoint */
+        @media screen and (max-width: 768px) {
+            .page { padding: 40px 24px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .apps-grid { grid-template-columns: 1fr 1fr; }
+            .schema-flow { flex-wrap: wrap; justify-content: center; gap: 15px; }
+            .schema-arrow { display: none; }
+            .cover h1 { font-size: 32px; }
+            .cover-badges { gap: 10px; }
+            .cover-badge { font-size: 11px; padding: 8px 14px; }
+            .pricing-table { font-size: 11px; }
+            .pricing-table th, .pricing-table td { padding: 10px 8px; }
+            div[style*="grid-template-columns: 1fr 1fr"] { display: block !important; }
+            .plan-box { margin-bottom: 15px; }
+            .section-title { font-size: 20px; }
+        }
+
+        /* Mobile breakpoint */
+        @media screen and (max-width: 480px) {
+            .page { padding: 30px 16px; }
+            .cover { min-height: 70vh; padding: 40px 0; }
+            .cover h1 { font-size: 28px; }
+            .cover h3 { font-size: 15px; margin-bottom: 30px; }
+            .cover-subtitle { font-size: 14px; }
+            .cover-badges { gap: 8px; }
+            .cover-badge { font-size: 10px; padding: 7px 10px; }
+            .apps-grid { grid-template-columns: 1fr; }
+            .pricing-table th, .pricing-table td { padding: 8px 6px; font-size: 10px; }
+            .plan-box ul li strong { white-space: nowrap; }
+            .highlight-box { padding: 20px 16px; }
+            .highlight-box h3 { font-size: 14px; }
+            .header { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .header-date { text-align: left; }
+            .brand-name { font-size: 22px; }
+            .schema-node-icon { width: 48px; height: 48px; font-size: 20px; }
+            .specs-table th, .specs-table td { padding: 8px 10px; font-size: 11px; }
+        }
+
+        .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 3px solid #29b6f6; margin-bottom: 30px; }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #0288d1, #4fc3f7); border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 6px; }
+        .brand-icon svg { width: 100%; height: 100%; }
+        .brand-icon .thm-tube { fill: none; stroke: white; stroke-width: 1; }
+        .brand-icon .thm-bulb { fill: none; stroke: white; stroke-width: 1; }
+        .brand-icon .thm-mercury { fill: #ff6b6b; }
+        .brand-icon .thm-scale line { stroke: white; stroke-width: 0.6; }
+        .brand-name { font-size: 28px; font-weight: 700; color: #29b6f6; letter-spacing: -0.5px; font-style: italic; }
+        .brand-tagline { font-size: 11px; color: #636e72; text-transform: uppercase; letter-spacing: 1.5px; }
+        .header-date { text-align: right; font-size: 11px; color: #636e72; }
+
+        .cover { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 60vh; text-align: center; padding: 60px 0; }
+        .cover-icon { width: 100px; height: 100px; background: linear-gradient(135deg, #0288d1, #4fc3f7); border-radius: 22px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 15px 50px rgba(41, 182, 246, 0.3); padding: 18px; }
+        .cover-icon svg { width: 100%; height: 100%; }
+        .cover-icon .thm-tube { fill: none; stroke: white; stroke-width: 1.2; }
+        .cover-icon .thm-bulb { fill: none; stroke: white; stroke-width: 1.2; }
+        .cover-icon .thm-mercury { fill: #ef5350; }
+        .cover-icon .thm-scale line { stroke: white; stroke-width: 0.8; }
+
+        .cover-temp { font-size: 16px; font-weight: 500; color: #546e7a; margin-bottom: 30px; }
+        .cover h1 { font-size: 42px; font-weight: 700; color: #29b6f6; margin-bottom: 5px; letter-spacing: -0.5px; font-style: italic; }
+        .cover h2 { font-size: 14px; font-weight: 500; color: #90a4ae; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 10px; border-top: 1px solid #b0bec5; border-bottom: 1px solid #b0bec5; padding: 6px 20px; display: inline-block; }
+        .cover h3 { font-size: 18px; font-weight: 300; color: #546e7a; margin-bottom: 50px; }
+        .cover-subtitle { font-size: 18px; color: #2d3436; font-weight: 300; max-width: 560px; line-height: 1.6; }
+        .cover-badges { display: flex; gap: 15px; margin-top: 50px; flex-wrap: wrap; justify-content: center; max-width: 100%; }
+        .cover-badge { background: #f8f9fa; border: 1px solid #dfe6e9; border-radius: 10px; padding: 10px 18px; font-size: 12px; color: #2d3436; font-weight: 500; }
+
+        .section-title { font-size: 24px; font-weight: 700; color: #29b6f6; margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid #dfe6e9; }
+        .section-intro { font-size: 15px; color: #636e72; margin-bottom: 24px; line-height: 1.7; }
+
+        .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+        .feature-card { background: #f8f9fa; border-radius: 12px; padding: 20px; border-left: 4px solid #29b6f6; }
+        .feature-card.green { border-left-color: #00b894; }
+        .feature-card.orange { border-left-color: #fdcb6e; }
+        .feature-card.red { border-left-color: #e17055; }
+        .feature-card.purple { border-left-color: #a29bfe; }
+        .feature-icon { font-size: 24px; margin-bottom: 8px; }
+        .feature-title { font-size: 15px; font-weight: 700; color: #2d3436; margin-bottom: 6px; }
+        .feature-desc { font-size: 13px; color: #636e72; line-height: 1.6; }
+
+        .schema-container { background: #f8f9fa; border-radius: 16px; padding: 22px; margin: 18px 0; }
+        .schema-flow { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .schema-node { text-align: center; flex: 1; }
+        .schema-node-icon { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 24px; }
+        .schema-node-icon.sensor { background: #dfe6e9; }
+        .schema-node-icon.wifi { background: #81ecec; }
+        .schema-node-icon.cloud { background: #74b9ff; }
+        .schema-node-icon.alert { background: #ffeaa7; }
+        .schema-node-icon.user { background: #a29bfe; }
+        .schema-node-label { font-size: 11px; font-weight: 600; color: #2d3436; }
+        .schema-node-sub { font-size: 10px; color: #636e72; }
+        .schema-arrow { font-size: 20px; color: #29b6f6; font-weight: bold; }
+
+        .specs-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; overflow-x: auto; display: block; }
+        .specs-table th { background: #29b6f6; color: white; padding: 12px 15px; text-align: left; font-weight: 600; white-space: nowrap; }
+        .specs-table td { padding: 10px 15px; border-bottom: 1px solid #dfe6e9; }
+        .specs-table tr:nth-child(even) { background: #f8f9fa; }
+
+        .pricing-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 15px rgba(0,0,0,0.05); display: block; overflow-x: auto; }
+        .pricing-table th { background: #2d3436; color: white; padding: 14px 15px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .pricing-table td { padding: 12px 15px; border-bottom: 1px solid #f1f2f6; }
+        .pricing-table .total-row { background: #29b6f6; color: white; font-weight: 700; }
+        .pricing-table .total-row td { border-bottom: none; padding: 14px 15px; font-size: 14px; }
+        .pricing-table .subtotal-row { background: #dfe6e9; font-weight: 600; }
+
+        .highlight-box { background: linear-gradient(135deg, #29b6f6, #00b894); color: white; border-radius: 12px; padding: 25px; margin: 25px 0; }
+        .highlight-box h3 { font-size: 16px; margin-bottom: 15px; }
+        .highlight-box .stats { display: flex; gap: 30px; flex-wrap: wrap; }
+        .highlight-box .stat { text-align: center; }
+        .highlight-box .stat-value { font-size: 28px; font-weight: 800; }
+        .highlight-box .stat-label { font-size: 10px; opacity: 0.85; text-transform: uppercase; letter-spacing: 1px; }
+
+        .bullet-list { list-style: none; margin: 15px 0; }
+        .bullet-list li { padding: 8px 0 8px 30px; position: relative; font-size: 14px; color: #2d3436; }
+        .bullet-list li::before { content: "✓"; position: absolute; left: 0; color: #00b894; font-weight: 800; font-size: 16px; }
+
+        .conditions { background: #f8f9fa; border-radius: 12px; padding: 25px; margin-top: 25px; }
+        .conditions h4 { font-size: 14px; font-weight: 700; color: #2d3436; margin-bottom: 12px; }
+        .conditions p { font-size: 12px; color: #636e72; margin-bottom: 6px; padding-left: 15px; position: relative; }
+        .conditions p::before { content: "•"; position: absolute; left: 0; color: #29b6f6; }
+
+        .apps-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .app-item { background: #f8f9fa; border-radius: 10px; padding: 20px; text-align: center; }
+        .app-item-icon { font-size: 32px; margin-bottom: 10px; }
+        .app-item-title { font-size: 13px; font-weight: 700; color: #2d3436; }
+        .app-item-desc { font-size: 12px; color: #636e72; margin-top: 6px; }
+
+        .plan-box { border: 2px solid #dfe6e9; border-radius: 16px; padding: 25px; margin: 15px 0; }
+        .plan-box.featured { border-color: #29b6f6; box-shadow: 0 5px 20px rgba(41,182,246,0.15); }
+        .plan-box h3 { font-size: 18px; color: #29b6f6; margin-bottom: 5px; }
+        .plan-box .plan-price { font-size: 15px; color: #636e72; margin-bottom: 15px; }
+        .plan-box ul { list-style: none; }
+        .plan-box ul li { font-size: 13px; padding: 6px 0 6px 22px; position: relative; }
+        .plan-box ul li::before { content: "✓"; position: absolute; left: 0; color: #00b894; font-weight: 700; }
+
+        .footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #dfe6e9; font-size: 10px; color: #b2bec3; }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .page { width: 210mm; min-height: 297mm; padding: 18mm; margin: 0 auto; page-break-after: always; break-after: page; border-top: none; max-width: none; }
+            .page:last-child { page-break-after: avoid; break-after: avoid; }
+            .page + .page { border-top: none; }
+            .cover { min-height: 250mm; }
+            .footer { margin-top: auto; }
+            .no-print { display: none; }
+        }
+        @media screen {
+            body { background: #f8f9fa; }
+            .page:first-child { padding-top: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+
+<!-- PORTADA -->
+<div class="page">
+    <div class="cover">
+        <img src="icon-128.png" alt="SmartTemp" style="width:100px; height:100px; border-radius:22px; margin-bottom:15px; box-shadow: 0 15px 50px rgba(41, 182, 246, 0.3);">
+        <h1>SmartTemp</h1>
+        <h2>Calibration Systems</h2>
+        <h3>Sistema de Monitoreo de Temperatura</h3>
+        <p class="cover-subtitle" style="color:#546e7a; max-width:480px; margin-top:20px;">Monitoreo continuo con trazabilidad, alertas en tiempo real, asistente IA integrado y plataforma cloud propia.</p>
+        <div class="cover-badges">
+            <span class="cover-badge">☁️ Cloud Propio</span>
+            <span class="cover-badge">📱 Alertas WhatsApp</span>
+            <span class="cover-badge">🤖 Asistente IA</span>
+            <span class="cover-badge">🔬 Calibración Trazable</span>
+            <span class="cover-badge">📊 Dashboard Web</span>
+        </div>
+    </div>
+    <div class="footer"><span>SmartTemp — Monitoreo Inteligente de Temperatura</span><span>Página 1</span></div>
+</div>
+
+<!-- PÁGINA 2: EL SISTEMA + TERMO -->
+<div class="page">
+    <div class="header">
+        <div class="brand"><div class="brand-icon"><img src="icon-96.png" alt="SmartTemp" style="width:50px;height:50px;border-radius:12px;"></div><div><div class="brand-name">SmartTemp</div><div class="brand-tagline">Monitoreo Inteligente de Temperatura</div></div></div>
+    </div>
+
+    <h2 class="section-title">El Sistema SmartTemp</h2>
+    <p class="section-intro">SmartTemp es un sistema IoT que mide, procesa y registra temperatura de forma continua. Toda la información está disponible en tiempo real desde cualquier dispositivo con acceso a internet.</p>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📡</div>
+            <div class="feature-title">Monitoreo Continuo 24/7</div>
+            <div class="feature-desc">Registro automático con intervalos configurables desde 1 minuto. Sin descarga manual por USB.</div>
+        </div>
+        <div class="feature-card green">
+            <div class="feature-icon">🌐</div>
+            <div class="feature-title">Dashboard Web</div>
+            <div class="feature-desc">Gráficos interactivos, históricos, estado en tiempo real. Accesible desde cualquier navegador.</div>
+        </div>
+        <div class="feature-card orange">
+            <div class="feature-icon">🚨</div>
+            <div class="feature-title">Alertas WhatsApp + Email</div>
+            <div class="feature-desc">Notificaciones inmediatas cuando la temperatura excede umbrales. Directamente en su celular.</div>
+        </div>
+        <div class="feature-card red">
+            <div class="feature-icon">🔬</div>
+            <div class="feature-title">Calibración Trazable</div>
+            <div class="feature-desc">Con patrón de referencia certificado LogTag UTRID-16. Generación automática de certificados.</div>
+        </div>
+        <div class="feature-card purple">
+            <div class="feature-icon">🤖</div>
+            <div class="feature-title">TERMO — Asistente IA Integrado</div>
+            <div class="feature-desc">Chatbot inteligente que responde consultas en tiempo real: temperaturas, estado de sensores, instrucciones de uso y diagnósticos. Disponible 24/7 dentro del dashboard.</div>
+        </div>
+        <div class="feature-card green">
+            <div class="feature-icon">📈</div>
+            <div class="feature-title">Históricos Ilimitados</div>
+            <div class="feature-desc">Base de datos sin tope. +112.000 mediciones en producción. Exportación a PDF/Excel.</div>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <h3>🤖 TERMO — Asistente Virtual Inteligente</h3>
+        <p style="font-size:12px; opacity:0.9;">Pregunte en lenguaje natural: "¿Cuál es la temperatura del freezer?" · "¿Qué sensores están offline?" · "¿Cómo configuro un umbral?" · "¿Por qué se desconectó?"</p>
+    </div>
+
+    <div class="footer"><span>SmartTemp — Monitoreo Inteligente de Temperatura</span><span>Página 2</span></div>
+</div>
+
+<!-- PÁGINA 3: ESQUEMA + SPECS -->
+<div class="page">
+    <div class="header">
+        <div class="brand"><div class="brand-icon"><img src="icon-96.png" alt="SmartTemp" style="width:50px;height:50px;border-radius:12px;"></div><div><div class="brand-name">SmartTemp</div><div class="brand-tagline">Monitoreo Inteligente de Temperatura</div></div></div>
+    </div>
+
+    <h2 class="section-title">Esquema de Funcionamiento</h2>
+    <div class="schema-container">
+        <div class="schema-flow">
+            <div class="schema-node"><div class="schema-node-icon sensor">🌡️</div><div class="schema-node-label">Sensores</div><div class="schema-node-sub">DS18B20 / PT100</div></div>
+            <div class="schema-arrow">→</div>
+            <div class="schema-node"><div class="schema-node-icon wifi">📶</div><div class="schema-node-label">Interfaz WiFi</div><div class="schema-node-sub">1 sensor por interfaz</div></div>
+            <div class="schema-arrow">→</div>
+            <div class="schema-node"><div class="schema-node-icon cloud">☁️</div><div class="schema-node-label">Cloud SmartTemp</div><div class="schema-node-sub">Base de datos + API</div></div>
+            <div class="schema-arrow">→</div>
+            <div class="schema-node"><div class="schema-node-icon alert">📱</div><div class="schema-node-label">Alertas</div><div class="schema-node-sub">WhatsApp + Email</div></div>
+            <div class="schema-arrow">→</div>
+            <div class="schema-node"><div class="schema-node-icon user">👤</div><div class="schema-node-label">Usuario</div><div class="schema-node-sub">Web / Móvil / TERMO</div></div>
+        </div>
+    </div>
+
+    <h2 class="section-title" style="margin-top:30px;">Datos Técnicos</h2>
+    <table class="specs-table">
+        <tr><th style="width:40%">Parámetro</th><th>Especificación</th></tr>
+        <tr><td><strong>Sensores</strong></td><td>DS18B20 (digital), PT100 (RTD), NTC</td></tr>
+        <tr><td><strong>Rango de temperatura</strong></td><td>−55°C a +125°C (DS18B20) / −200°C a +850°C (PT100)</td></tr>
+        <tr><td><strong>Precisión</strong></td><td>±0.5°C (DS18B20) / ±0.1°C (PT100 calibrado)</td></tr>
+        <tr><td><strong>Resolución</strong></td><td>0.0625°C (12 bits)</td></tr>
+        <tr><td><strong>Intervalo de registro</strong></td><td>Configurable: 1 minuto a 24 horas</td></tr>
+        <tr><td><strong>Interfaz de comunicación</strong></td><td>WiFi 802.11 b/g/n + MQTT (1 sensor por interfaz)</td></tr>
+        <tr><td><strong>Alimentación</strong></td><td>Fuente 5V USB o Batería Li-Ion (deep sleep >6 meses)</td></tr>
+        <tr><td><strong>Alcance WiFi</strong></td><td>50m interior / 100m exterior</td></tr>
+        <tr><td><strong>Almacenamiento</strong></td><td>Cloud ilimitado (MariaDB)</td></tr>
+        <tr><td><strong>Patrón de calibración</strong></td><td>LogTag UTRID-16 (±0.5°C, 21 CFR Part 11, certificado vigente)</td></tr>
+        <tr><td><strong>Asistente IA</strong></td><td>TERMO — Asistente virtual integrado en el dashboard</td></tr>
+        <tr><td><strong>Usuarios</strong></td><td>Plan A: 4 incluidos | Plan B: Ilimitados</td></tr>
+    </table>
+
+    <div class="footer"><span>SmartTemp — Monitoreo Inteligente de Temperatura</span><span>Página 3</span></div>
+</div>
+
+<!-- PÁGINA 4: APLICACIONES -->
+<div class="page">
+    <div class="header">
+        <div class="brand"><div class="brand-icon"><img src="icon-96.png" alt="SmartTemp" style="width:50px;height:50px;border-radius:12px;"></div><div><div class="brand-name">SmartTemp</div><div class="brand-tagline">Monitoreo Inteligente de Temperatura</div></div></div>
+    </div>
+
+    <h2 class="section-title">Aplicaciones</h2>
+    <div class="apps-grid">
+        <div class="app-item"><div class="app-item-icon">🏥</div><div class="app-item-title">Salud</div><div class="app-item-desc">Laboratorios, consultorios, hemoterapia, farmacia hospitalaria</div></div>
+        <div class="app-item"><div class="app-item-icon">❄️</div><div class="app-item-title">Cadena de Frío</div><div class="app-item-desc">Heladeras, freezers, cámaras, crioconservación</div></div>
+        <div class="app-item"><div class="app-item-icon">💊</div><div class="app-item-title">Farmacéutica</div><div class="app-item-desc">Medicamentos y vacunas bajo condiciones controladas</div></div>
+        <div class="app-item"><div class="app-item-icon">🍖</div><div class="app-item-title">Alimentos</div><div class="app-item-desc">Restaurantes, caterings, transporte refrigerado</div></div>
+        <div class="app-item"><div class="app-item-icon">🔬</div><div class="app-item-title">Laboratorios</div><div class="app-item-desc">Control ambiental, incubadoras, biología molecular</div></div>
+        <div class="app-item"><div class="app-item-icon">🏭</div><div class="app-item-title">Industria</div><div class="app-item-desc">Data centers, salas limpias, procesos productivos</div></div>
+    </div>
+
+    <h2 class="section-title" style="margin-top:25px;">Funcionalidades Incluidas</h2>
+    <ul class="bullet-list">
+        <li>Monitoreo 24/7 con registro automático en cloud</li>
+        <li>Alertas inmediatas por WhatsApp y email ante desvíos</li>
+        <li>Asistente IA (TERMO) para consultas y capacitación interactiva</li>
+        <li>Calibración trazable con patrón LogTag UTRID-16 + certificados automáticos</li>
+        <li>Dashboard web con gráficos interactivos y exportación PDF/Excel</li>
+        <li>Diagnóstico remoto de sensores y red</li>
+        <li>Sectorización de equipos y sensores por área</li>
+        <li>Registro de eventos, supervisiones y audit trail</li>
+        <li>Roles diferenciados (Administrador, Coordinador, Operador)</li>
+        <li>Instalación inalámbrica — sin cableado de red</li>
+        <li>Bajo consumo (deep sleep) para operación con batería</li>
+        <li>Sin licencias de terceros ni costos ocultos de suscripción</li>
+    </ul>
+
+    <div class="footer"><span>SmartTemp — Monitoreo Inteligente de Temperatura</span><span>Página 4</span></div>
+</div>
+
+<!-- PÁGINA 5: PLANES COMERCIALES -->
+<div class="page">
+    <div class="header">
+        <div class="brand"><div class="brand-icon"><img src="icon-96.png" alt="SmartTemp" style="width:50px;height:50px;border-radius:12px;"></div><div><div class="brand-name">SmartTemp</div><div class="brand-tagline">Monitoreo Inteligente de Temperatura</div></div></div>
+        <div class="header-date">Buenos Aires, ___/___/2026<br>PROPUESTA COMERCIAL</div>
+    </div>
+
+    <h2 class="section-title">Planes Comerciales</h2>
+    <p class="section-intro">Dos modalidades de contratación según sus necesidades. Ambas incluyen todas las funcionalidades del sistema, TERMO, alertas y usuarios ilimitados.</p>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="plan-box featured">
+            <h3>Plan A — Pago Único</h3>
+            <p class="plan-price">Ideal para 1–4 puntos de monitoreo</p>
+            <ul>
+                <li>Kit plataforma (Cloud + Dashboard + TERMO + Alertas + Config): <strong>$886.000</strong></li>
+                <li>Interfaz SmartTemp WiFi (1 sensor por interfaz): <strong>$797.000 c/u</strong></li>
+                <li>Sensor + calibración trazable + certificado: <strong>$266.000 c/u</strong></li>
+                <li>Acceso móvil: <strong>Incluido en el kit</strong></li>
+                <li>Instalación: <strong>Incluida</strong></li>
+                <li>Usuarios incluidos: <strong>4</strong> (adicional: $23.000/mes c/u)</li>
+                <li>Garantía: <strong>6 meses</strong></li>
+                <li>Servidor + Base de datos: <strong>$89.000/mes</strong></li>
+            </ul>
+        </div>
+        <div class="plan-box">
+            <h3>Plan B — Abono Mensual</h3>
+            <p class="plan-price">Mínimo 5 sensores — Menor inversión inicial</p>
+            <ul>
+                <li>Instalación: <strong>$177.000</strong></li>
+                <li>Menos de 3 sensores: <strong>$89.000/mes c/u</strong></li>
+                <li>De 4 a 15 sensores: <strong>$71.000/mes c/u</strong></li>
+                <li>De 16 en adelante: <strong>$53.000/mes c/u</strong></li>
+                <li>Garantía por falla técnica: <strong>100% al sistema</strong></li>
+                <li>Asistencia técnica telefónica: <strong>24/7</strong></li>
+                <li>Interfaces en comodato durante vigencia del contrato</li>
+                <li>Incluye: Cloud, alertas, soporte, TERMO, móvil</li>
+                <li>Usuarios: <strong>Ilimitados</strong></li>
+                <li>Depósito en garantía por equipos: <strong>$354.000</strong> (reembolsable)</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2 class="section-title" style="margin-top:30px;">Ejemplo: Plan A — 2 sensores</h2>
+    <table class="pricing-table">
+        <tr><th>Código</th><th>Cant</th><th>Descripción</th><th>$ Unit.</th><th>$ Total</th></tr>
+        <tr><td><strong>ST-KIT</strong></td><td>1</td><td>Kit plataforma SmartTemp (Cloud + Dashboard + TERMO + Alertas + Acceso Móvil + Puesta en marcha)</td><td style="text-align:right">886.000</td><td style="text-align:right">886.000</td></tr>
+        <tr><td><strong>ST-INT</strong></td><td>1</td><td>Interfaz SmartTemp WiFi (ESP8266 + gabinete + fuente + firmware)</td><td style="text-align:right">797.000</td><td style="text-align:right">797.000</td></tr>
+        <tr><td><strong>ST-SENS</strong></td><td>2</td><td>Sensor de temperatura (DS18B20, rango −55 a +125°C) + cable + calibración trazable LogTag + certificado</td><td style="text-align:right">266.000</td><td style="text-align:right">532.000</td></tr>
+        <tr class="total-row"><td colspan="4">TOTAL INVERSIÓN INICIAL</td><td style="text-align:right">$ 2.215.000</td></tr>
+    </table>
+    <p style="font-size:11px; color:#636e72; margin-top:8px;">Servidor + Base de datos: $89.000/mes (hosting cloud dedicado). Garantía: 6 meses.</p>
+
+    <h2 class="section-title" style="margin-top:25px;">Ejemplo: Plan B — 5 sensores (abono)</h2>
+    <table class="pricing-table">
+        <tr><th>Código</th><th>Cant</th><th>Descripción</th><th>$ Unit.</th><th>$ Total</th></tr>
+        <tr><td><strong>ST-INST</strong></td><td>1</td><td>Instalación + configuración + puesta en marcha</td><td style="text-align:right">177.000</td><td style="text-align:right">177.000</td></tr>
+        <tr><td><strong>ST-ABONO</strong></td><td>5</td><td>Abono mensual por sensor (escalonado: &lt;3: $89.000 | 4-15: $71.000 | 16+: $53.000)</td><td style="text-align:right">71.000/mes</td><td style="text-align:right">355.000/mes</td></tr>
+        <tr><td><strong>ST-GAR</strong></td><td>—</td><td>Garantía por falla técnica 100% al sistema</td><td style="text-align:right">—</td><td style="text-align:right">Incluida</td></tr>
+        <tr><td><strong>ST-ASIST</strong></td><td>—</td><td>Asistencia técnica telefónica 24/7</td><td style="text-align:right">—</td><td style="text-align:right">Incluida</td></tr>
+        <tr class="subtotal-row"><td colspan="4">INVERSIÓN INICIAL (única vez)</td><td style="text-align:right">$ 177.000</td></tr>
+        <tr class="total-row"><td colspan="4">RECURRENCIA MENSUAL (5 sensores)</td><td style="text-align:right">$ 355.000/mes</td></tr>
+    </table>
+    <p style="font-size:11px; color:#636e72; margin-top:8px;">Costo total año 1: $177.000 + ($355.000 × 12) = $4.437.000</p>
+
+    <div class="conditions">
+        <h4>Condiciones Generales</h4>
+        <p>Precios en pesos argentinos al TC dólar BNA vendedor del día de facturación. No incluyen IVA. Validez: 15 días.</p>
+        <p>Plazo de entrega: 7 a 15 días hábiles</p>
+        <p>Forma de pago: 50% anticipo, 50% contra entrega</p>
+        <h5 style="margin-top:12px; margin-bottom:4px;">Condiciones Plan A:</h5>
+        <p>Garantía: <strong>6 meses</strong></p>
+        <p>Servidor + BD: <strong>$89.000/mes</strong></p>
+        <p>Recalibración anual: <strong>$89.000/punto</strong></p>
+        <h5 style="margin-top:12px; margin-bottom:4px;">Condiciones Plan B:</h5>
+        <p>Instalación: <strong>$177.000</strong></p>
+        <p>Abono mensual por sensor (escalonado): <strong>Menos de 3: $89.000 | 4-15: $71.000 | 16+: $53.000</strong></p>
+        <p>Garantía por falla técnica: <strong>100% al sistema</strong></p>
+        <p>Asistencia técnica telefónica: <strong>24/7</strong></p>
+        <p>Interfaces en comodato durante vigencia del contrato</p>
+        <p>Depósito en garantía por equipos en comodato: <strong>$354.000</strong> (reembolsable al devolver equipos en buen estado)</p>
+        <p>Abono mensual sujeto a ajuste al TC dólar BNA vendedor del día de facturación de cada mes</p>
+    </div>
+
+    <div class="footer"><span>SmartTemp — Monitoreo Inteligente de Temperatura</span><span>Página 5</span></div>
+</div>
+
+<!-- PÁGINA 6: VENTAJAS + CONTACTO -->
+<div class="page">
+    <div class="header">
+        <div class="brand"><div class="brand-icon"><img src="icon-96.png" alt="SmartTemp" style="width:50px;height:50px;border-radius:12px;"></div><div><div class="brand-name">SmartTemp</div><div class="brand-tagline">Monitoreo Inteligente de Temperatura</div></div></div>
+    </div>
+
+    <h2 class="section-title">¿Por qué SmartTemp?</h2>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <div class="feature-title">Asistente IA Integrado</div>
+            <div class="feature-desc">TERMO responde consultas de datos, instrucciones y diagnósticos 24/7. Ningún competidor lo ofrece.</div>
+        </div>
+        <div class="feature-card green">
+            <div class="feature-icon">💰</div>
+            <div class="feature-title">Sin Licencias de Terceros</div>
+            <div class="feature-desc">Cloud propio. No paga suscripciones a plataformas externas.</div>
+        </div>
+        <div class="feature-card orange">
+            <div class="feature-icon">📲</div>
+            <div class="feature-title">Alertas por WhatsApp</div>
+            <div class="feature-desc">Directo a su celular. Sin apps extra ni configuraciones complicadas.</div>
+        </div>
+        <div class="feature-card red">
+            <div class="feature-icon">📜</div>
+            <div class="feature-title">Calibración Incluida</div>
+            <div class="feature-desc">Con patrón trazable y certificados automáticos. Otros lo cobran aparte.</div>
+        </div>
+        <div class="feature-card purple">
+            <div class="feature-icon">🛠️</div>
+            <div class="feature-title">Instalación + Soporte</div>
+            <div class="feature-desc">Todo configurado en sitio. Soporte técnico incluido. Entrega en 7–15 días.</div>
+        </div>
+        <div class="feature-card green">
+            <div class="feature-icon">🔄</div>
+            <div class="feature-title">Escalable</div>
+            <div class="feature-desc">Agregue puntos de monitoreo fácilmente. Crezca sin límites ni cambios de plan.</div>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <h3>Su inversión total es hasta un 65% menor que la competencia, con más funcionalidades incluidas y sin abonos ocultos de plataforma.</h3>
+    </div>
+
+    <div style="margin-top:40px; text-align:center; padding:30px; background:#f8f9fa; border-radius:12px;">
+        <h3 style="font-size:18px; color:#2d3436; margin-bottom:15px;">Contacto</h3>
+        <p style="font-size:14px; color:#636e72; margin-bottom:5px;">📧 smarttemp@diseñosyefectos.com</p>
+        <p style="font-size:14px; color:#636e72; margin-bottom:5px;">📱 1125111398</p>
+        <p style="font-size:14px; color:#636e72; margin-bottom:5px;">🌐 <a href="https://xn--diseosyefectos-tnb.com/" style="color:#29b6f6;">diseñosyefectos.com</a></p>
+        <p style="font-size:12px; color:#b2bec3; margin-top:15px;">Solicite una demostración en vivo del sistema y del asistente TERMO</p>
+    </div>
+
+    <div class="footer"><span>SmartTemp — Monitoreo Inteligente de Temperatura</span><span>Página 6</span></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Create the full Typst document (propuesta-smarttemp.typ) that reproduces the 6-page commercial proposal with parameterized variables, professional styling, and correct A4 layout.",
+  "status": "completed",
+  "steps": [
+    "Create /projects/sandbox/Presupuesto/propuesta-smarttemp.typ with parameterized variables at the top for: client_name, date, quantity_sensors, quantity_interfaces, price_kit, price_interface, price_sensor, price_mobile, price_server_monthly, abono_5_30, abono_31_50, abono_50_plus, contact_email, contact_phone, contact_web",
+    "Implement Page 1 (Cover): centered layout with SmartTemp brand name (italic, #29b6f6), 'Calibration Systems' subtitle, 'Sistema de Monitoreo de Temperatura' description, cover subtitle text, and 5 badges (Cloud Propio, Alertas WhatsApp, Asistente IA, Calibracion Trazable, Dashboard Web). Include a thermometer icon/graphic element.",
+    "Implement Page 2 (El Sistema SmartTemp): header with brand, section title, intro paragraph, 6 feature cards in a 2-column grid with colored left borders (blue, green, orange, red, purple, green), plus the TERMO highlight box with gradient background (blue to green).",
+    "Implement Page 3 (Esquema + Datos Tecnicos): system flow diagram showing Sensores -> WiFi -> Cloud -> Alertas -> Usuario with circular icons and arrows, followed by a technical specs table with 12 rows (blue header, alternating row colors).",
+    "Implement Page 4 (Aplicaciones): 3x2 grid of application cards (Salud, Cadena de Frio, Farmaceutica, Alimentos, Laboratorios, Industria) with emoji icons, plus 'Funcionalidades Incluidas' section with 12 checkmark bullet items.",
+    "Implement Page 5 (Planes Comerciales): two plan boxes side-by-side (Plan A Pago Unico featured with blue border, Plan B Abono Mensual), pricing example table for Plan A (2 sensors, total USD 1400), pricing example table for Plan B (5 sensors, USD 500 initial + 300/mes), and commercial conditions box.",
+    "Implement Page 6 (Por que SmartTemp + Contacto): 6 advantage cards in 2-column grid, highlight box with savings message, and centered contact card with parameterized email/phone/web.",
+    "Add consistent page footer on all pages: 'SmartTemp - Monitoreo Inteligente de Temperatura' left-aligned, 'Pagina N' right-aligned.",
+    "Add page header (pages 2-6): brand name 'SmartTemp' with tagline separated by a blue bottom border.",
+    "Verify the document compiles cleanly with: typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf"
+  ],
+  "acceptance_criteria": [
+    "Running 'typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf' produces a PDF without errors",
+    "The .typ file has parameterized variables at the top that can be changed for different clients",
+    "The PDF has exactly 6 pages matching the structure of the HTML original",
+    "Brand color #29b6f6 is used consistently for headings, borders, and accents",
+    "Tables have proper formatting with colored headers and clean borders",
+    "Feature cards have colored left borders matching the HTML (blue, green, orange, red, purple)",
+    "The document uses sans-serif font styling"
+  ],
+  "verification": [
+    "cd /projects/sandbox/Presupuesto && typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf",
+    "test -f /projects/sandbox/Presupuesto/propuesta-smarttemp.pdf && echo 'PDF generated successfully'",
+    "typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf 2>&1 | grep -i error || echo 'No compilation errors'"
+  ],
+  "blocked_reason": null,
+  "findings": "Compiled successfully with Typst 0.15.1. Font used: Noto Sans (DejaVu Sans not available as non-mono). Some emoji symbols (globe.meridians, light.police, signal, recycle) not available in Typst emoji module - used direct Unicode characters instead. Dollar signs must be escaped as \\$ in content blocks to avoid math mode. Tight spacing required on page 5 to fit all pricing content within one page."
+}

@@ -1,0 +1,35 @@
+{
+  "id": "FEAT-005",
+  "type": "fix",
+  "description": "Polish Typst PDF to match HTML visual quality: proper spacing, degree symbols, clean page breaks, improved typography, and consistent professional appearance.",
+  "status": "completed",
+  "steps": [
+    "Reduce top margin from 42mm to 32mm for better header positioning",
+    "Improve section titles, feature cards, and check items with better sizing and spacing",
+    "Add proper degree symbols and plus-minus symbols in technical specs table",
+    "Remove duplicate cover subtitle text",
+    "Increase font sizes slightly for readability (tables 8pt to 8.5pt, descriptions 8.5pt to 9pt)",
+    "Add proper border radius (10-12pt) matching HTML styling",
+    "Fix contact web display to show domain name instead of full URL",
+    "Clean up unused .btn-download CSS from HTML version",
+    "Update index.html download button text to 'Descargar PDF'",
+    "Remove duplicate paragraph from HTML cover page"
+  ],
+  "acceptance_criteria": [
+    "PDF compiles without errors (only expected Segoe UI font warning)",
+    "PDF has exactly 6 pages with no content overflow",
+    "All Spanish accents are correct throughout",
+    "Degree symbols and plus-minus symbols display properly in technical specs",
+    "Cover page has single subtitle paragraph (no duplication)",
+    "Tables have proper alternating row colors and styled headers",
+    "Feature cards have colored left borders matching HTML design",
+    "index.html has 'Descargar PDF' button linking to propuesta-smarttemp.pdf",
+    "propuesta-smarttemp.html has no download button"
+  ],
+  "verification": [
+    "cd /projects/sandbox/Presupuesto && typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf",
+    "test -f /projects/sandbox/Presupuesto/propuesta-smarttemp.pdf && echo 'PDF generated successfully'"
+  ],
+  "blocked_reason": null,
+  "findings": "Compiled successfully with Typst 0.15.1. Only available sans-serif font is Noto Sans (Segoe UI not available on Linux). PDF is 167KB across 6 pages. Proper Unicode characters used for degree symbol, plus-minus, and minus sign. Reduced top margin from 42mm to 32mm provides good header breathing room without wasting space."
+}

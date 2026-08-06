@@ -1,0 +1,24 @@
+{
+  "id": "FEAT-004",
+  "type": "fix",
+  "description": "Fix visual issues in the Typst proposal: header top margin, Spanish accents, cover page visibility, and excessive whitespace.",
+  "status": "completed",
+  "steps": [
+    "Increase top margin or add padding to header so it doesn't stick to the page edge",
+    "Fix all missing Spanish accents/tildes throughout the document",
+    "Fix cover page (page 1) content centering so it displays correctly",
+    "Reduce excessive whitespace on pages 2 and 3 for better content distribution"
+  ],
+  "acceptance_criteria": [
+    "Header on pages 2+ has visible top breathing room",
+    "All Spanish text has correct accents (Calibración, Históricos, Técnicos, automática, información, etc.)",
+    "Cover page content (logo, title, badges) is visible and vertically centered",
+    "Pages 2 and 3 have better content distribution with less empty space"
+  ],
+  "verification": [
+    "cd /projects/sandbox/Presupuesto && typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf",
+    "test -f /projects/sandbox/Presupuesto/propuesta-smarttemp.pdf && echo 'PDF generated successfully'"
+  ],
+  "blocked_reason": null,
+  "findings": "All 4 fixes implemented successfully. Top margin increased from 16mm to 28mm with additional v(8pt) inside header for breathing room. Cover page wrapped in dedicated #page() block with header:none to fix vertical centering. All Spanish accents corrected throughout. Added Funcionalidades Incluidas section (12 checkmark items) after Aplicaciones to fill whitespace on page 3. PDF compiles cleanly (only expected Segoe UI font warning)."
+}

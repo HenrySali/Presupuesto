@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-003",
+  "type": "fix",
+  "description": "Fix SVG logo rendering in Typst - replace inline SVG bytes approach with external SVG file reference to correctly display the thermometer logo.",
+  "status": "completed",
+  "steps": [
+    "Create /projects/sandbox/Presupuesto/logo-smarttemp.svg with the thermometer graphic (blue rounded background, white stroke thermometer, red mercury fill, white scale lines)",
+    "Update propuesta-smarttemp.typ to remove the inline SVG raw block and image(bytes(...)) approach",
+    "Replace thermo-logo and thermo-logo-large functions to use image(\"logo-smarttemp.svg\") with appropriate sizing",
+    "Verify compilation with typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf"
+  ],
+  "acceptance_criteria": [
+    "logo-smarttemp.svg exists and contains a valid SVG thermometer graphic with blue background",
+    "propuesta-smarttemp.typ uses image(\"logo-smarttemp.svg\") instead of image(bytes(...))",
+    "The document compiles without errors",
+    "The logo renders correctly at both 80pt (cover) and 32pt (header) sizes"
+  ],
+  "verification": [
+    "cd /projects/sandbox/Presupuesto && typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf",
+    "test -f /projects/sandbox/Presupuesto/logo-smarttemp.svg && echo 'SVG file exists'",
+    "test -f /projects/sandbox/Presupuesto/propuesta-smarttemp.pdf && echo 'PDF generated successfully'"
+  ],
+  "blocked_reason": null,
+  "findings": "The inline SVG bytes approach (image(bytes(...))) does not work for SVG rendering in Typst 0.15.1. Using an external SVG file with image(\"logo-smarttemp.svg\") works correctly. The SVG includes the blue rounded background (#29b6f6) directly in the file, so no wrapping box with fill is needed in Typst. Compilation produces no errors (only the expected Segoe UI font warning)."
+}

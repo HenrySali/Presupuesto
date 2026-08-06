@@ -1,0 +1,18 @@
+{
+  "project_type": "Document generation - Typst commercial proposal",
+  "language": "Typst markup",
+  "build_system": "typst compile",
+  "test_framework": "Visual verification via PDF compilation",
+  "build_command": "typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf",
+  "test_command": "typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf && test -f propuesta-smarttemp.pdf",
+  "verification_instructions": "Run typst compile on the .typ file and verify it produces a valid PDF without errors",
+  "snapshot_or_generated_files": "propuesta-smarttemp.pdf is the generated output, not checked in",
+  "setup_instructions": "typst CLI v0.15.1 already installed at /root/.cargo/bin/typst",
+  "environment_constraints": "Amazon Linux 2023, typst 0.15.1 installed via cargo. Network available for font/package downloads if needed.",
+  "contribution_requirements": "None - simple single-file project",
+  "key_patterns": "The source HTML has 6 pages: cover, features+TERMO, schema+specs, applications, pricing plans, advantages+contact. Brand color #29b6f6, sans-serif fonts, feature cards with colored left borders, pricing tables with dark headers.",
+  "relevant_files": [
+    "/projects/sandbox/Presupuesto/propuesta-smarttemp.html"
+  ],
+  "directory_structure": "Root contains only propuesta-smarttemp.html. The .typ file and any index.html will be created at root level."
+}

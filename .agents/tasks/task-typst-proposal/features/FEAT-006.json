@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-006",
+  "type": "fix",
+  "description": "Update pricing proposal: Plan A mobile included in kit, Plan B tiered pricing, deposit condition for loaned equipment.",
+  "status": "completed",
+  "steps": [
+    "Plan A: Remove mobile access as separate item (ST-MOB line) and include it in the kit description - both Typst and HTML",
+    "Plan B: Change flat $40/mes to tiered pricing: <3 sensors $50, 4-15 sensors $40, 16+ sensors $30 - both Typst and HTML",
+    "Conditions: Add deposit guarantee line (USD 200 refundable) - both Typst and HTML",
+    "Update parameterized variables and calculated totals in Typst to reflect changes"
+  ],
+  "acceptance_criteria": [
+    "Plan A kit includes mobile access (no separate ST-MOB line item)",
+    "Plan B shows tiered pricing instead of flat $40/mes",
+    "Conditions section includes deposit guarantee for loaned equipment",
+    "Typst compiles without errors",
+    "Both HTML and Typst files are consistent"
+  ],
+  "verification": [
+    "cd /projects/sandbox/Presupuesto && typst compile propuesta-smarttemp.typ propuesta-smarttemp.pdf",
+    "test -f /projects/sandbox/Presupuesto/propuesta-smarttemp.pdf && echo 'PDF generated successfully'"
+  ],
+  "blocked_reason": null,
+  "findings": "Compiled successfully with Typst 0.15.1 (only expected Segoe UI font warning). PDF generated at 164KB. Plan A total reduced from $1400 to $1250 for 2-sensor example. Both HTML and Typst are consistent."
+}
